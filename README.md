@@ -15,5 +15,7 @@
  [4、Android04--Android服务](notes/04.Service.md)  
  [5、Android05--Android服务通信](notes/05.ServiceConnect.md)  
  [6、Android06--Android广播接收器](notes/06.BroadcastReceiver.md)  
+ [7、Android07--Android日志系统](notes/07.Logcat.md)  
+ [8、Android08--Android权限系统](notes/08.Permission.md)  
  
 ## 用户界面
