@@ -29,9 +29,11 @@
  [16、Android16--自定义控件](notes/16.MyWidget.md)   
  
 ## 数据存储
+待学习。
 
 
 ## 网络与通信
+待学习。  
 
 >参考资料：  
 1、极客学院：[《Android工程师》职业路径图](http://ke.jikexueyuan.com/zhiye/android/)  
