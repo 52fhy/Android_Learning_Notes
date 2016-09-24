@@ -33,7 +33,16 @@
 
 
 ## 网络与通信
-待学习。  
+待学习。
+
+## 系统功能  
+待学习。
+
+## Android开源库 
+待学习。
+
+## Android测试 
+待学习。
 
 >参考资料：  
 1、极客学院：[《Android工程师》职业路径图](http://ke.jikexueyuan.com/zhiye/android/)  
