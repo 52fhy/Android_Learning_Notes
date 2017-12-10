@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Functional Programming in PHP -  PHP 之道 | PHP The Right Way 中文版</title>
+        <meta name="description" content=""/>
+        <meta name="robots" content="index,follow,archive"/>
+        <meta property="og:image:url" content="http://www.phptherightway.com/images/og-image.png"/>
+        <meta property="og:image:width" content="1024"/>
+        <meta property="og:image:height" content="640"/>
+        <meta property="og:title" content="PHP: The Right Way"/>
+        <meta property="og:description" content="An easy-to-read, quick reference for PHP best practices, accepted coding standards, and links to authoritative PHP tutorials around the Web"/>
+        <meta property="og:url" content="http://www.phptherightway.com"/>
+        <meta property="og:site_name" content="PHP: The Right Way"/>
+        <meta property="og:type" content="website"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <link rel="icon" href="../images/favicon.png" type="image/png"/>
+        <link rel="stylesheet" href="../styles/syntax.css">
+        <link rel="stylesheet" href="../styles/css.css">
+        <base href="">
+        <style>
+        
+        </style>
+    </head>
+    <body>
+        <header class="site-header">
+            <h1><a href="http://laravel-china.github.io/">PHP <em>The Right Way</em></a></h1>
+            <div class="build-date">最后更新于: 2017-03-16 03:10:55 +0000 由 <a href="https://laravel-china.org/" target="_blank" >Laravel China 社区</a> 维护</div>
+            <div class="share">
+                <a class="btn-share" href="http://service.weibo.com/share/share.php?url=http://laravel-china.github.io/php-the-right-way&title=PHP+The+Right+Way+PHP+之道" target="_blank">分享到微博</a>
+                <br>
+                 <a class="btn-share" href="https://laravel-china.org/" target="_blank" style="margin-top: 13px;">❤ Laravel China 社区 ❤</a> 
+            </div>
+            <a class="fork-me" href="https://github.com/codeguy/php-the-right-way" target="_blank"></a>
+        </header>
+
+        <div class="site-content">
+            <h1 id="functional-programming-in-php">Functional Programming in PHP</h1>
+
+<p>PHP supports first-class functions, meaning that a function can be assigned to a variable. Both user-defined and
+built-in functions can be referenced by a variable and invoked dynamically. Functions can be passed as arguments to
+other functions and a function can return other functions (a feature called higher-order functions).</p>
+
+<p>Recursion, a feature that allows a function to call itself, is supported by the language, but most of the PHP code
+focus is on iteration.</p>
+
+<p>Anonymous functions (with support for closures) have been present since PHP 5.3 (2009).</p>
+
+<p>PHP 5.4 added the ability to bind closures to an object’s scope and also improved support for callables such that they
+can be used interchangeably with anonymous functions in almost all cases.</p>
+
+<p>The most common usage of higher-order functions is when implementing a strategy pattern. The built-in <code class="highlighter-rouge">array_filter()</code>
+function asks both for the input array (data) and a function (a strategy or a callback) used as a filter function on
+each array item.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$input</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+
+<span class="c1">// Creates a new anonymous function and assigns it to a variable
+</span><span class="nv">$filter_even</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nv">$item</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Built-in array_filter accepts both the data and the function
+</span><span class="nv">$output</span> <span class="o">=</span> <span class="nb">array_filter</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nv">$filter_even</span><span class="p">);</span>
+
+<span class="c1">// The function doesn't need to be assigned to a variable. This is valid too:
+</span><span class="nv">$output</span> <span class="o">=</span> <span class="nb">array_filter</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nv">$item</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nb">print_r</span><span class="p">(</span><span class="nv">$output</span><span class="p">);</span></code></pre></figure>
+
+<p>A closure is an anonymous function that can access variables imported from the outside scope without using any global
+variables. Theoretically, a closure is a function with some arguments closed (e.g. fixed) by the environment when it is
+defined. Closures can work around variable scope restrictions in a clean way.</p>
+
+<p>In the next example we use closures to define a function returning a single filter function for <code class="highlighter-rouge">array_filter()</code>, out
+of a family of filter functions.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="sd">/**
+ * Creates an anonymous filter function accepting items &gt; $min
+ *
+ * Returns a single filter out of a family of "greater than n" filters
+ */</span>
+<span class="k">function</span> <span class="nf">criteria_greater_than</span><span class="p">(</span><span class="nv">$min</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">function</span><span class="p">(</span><span class="nv">$item</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$min</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$item</span> <span class="o">&gt;</span> <span class="nv">$min</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="nv">$input</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+
+<span class="c1">// Use array_filter on a input with a selected filter function
+</span><span class="nv">$output</span> <span class="o">=</span> <span class="nb">array_filter</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nx">criteria_greater_than</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+
+<span class="nb">print_r</span><span class="p">(</span><span class="nv">$output</span><span class="p">);</span> <span class="o">//</span> <span class="nx">items</span> <span class="o">&gt;</span> <span class="mi">3</span></code></pre></figure>
+
+<p>Each filter function in the family accepts only elements greater than some minimum value. Single filter returned by
+<code class="highlighter-rouge">criteria_greater_than</code> is a closure with <code class="highlighter-rouge">$min</code> argument closed by the value in the scope (given as an argument when
+<code class="highlighter-rouge">criteria_greater_than</code> is called).</p>
+
+<p>Early binding is used by default for importing <code class="highlighter-rouge">$min</code> variable into the created function. For true closures with late
+binding one should use a reference when importing. Imagine a templating or input validation library, where closure is
+defined to capture variables in scope and access them later when the anonymous function is evaluated.</p>
+
+<ul>
+  <li><a href="http://php.net/functions.anonymous">Read about Anonymous functions</a></li>
+  <li><a href="https://wiki.php.net/rfc/closures">More details in the Closures RFC</a></li>
+  <li><a href="http://php.net/function.call-user-func-array">Read about dynamically invoking functions with <code class="highlighter-rouge">call_user_func_array()</code></a></li>
+</ul>
+
+
+        </div>
+
+        <footer class="site-footer" id="credits">
+             <h2>中文版本</h2>  
+            <ul>
+                <li><a href="https://github.com/summerblue" target="_blank">Summer</a></li>
+                <li><a href="https://laravel-china.org/" target="_blank">Laravel China 社区</a></li>
+                <li><a href="https://github.com/laravel-china/php-the-right-way/graphs/contributors" target="_blank">项目贡献者</a></li>
+            </ul>
+            <h2>原始版本创建和维护</h2>
+            <ul>
+                <li><a href="http://joshlockhart.com" target="_blank">Josh Lockhart</a></li>
+                <li><a href="http://philsturgeon.co.uk/" target="_blank">Phil Sturgeon</a></li>
+                <li><a href="https://github.com/codeguy/php-the-right-way/graphs/contributors" target="_blank">Project Contributors</a></li>
+            </ul>
+            <div class="license">
+                <a class="cc-badge" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"></a>
+                <br />
+                <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">PHP: The Right Way</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://joshlockhart.com" property="cc:attributionName" rel="cc:attributionURL">Josh Lockhart</a>
+                <br/>
+                is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://www.phptherightway.com" rel="dct:source">www.phptherightway.com</a>.
+            </div>
+        </footer>
+    </body>
+</html>

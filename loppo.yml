@@ -1,0 +1,7 @@
+dir: notes
+output: dist
+site: 安卓学习笔记
+theme: oceandeep
+customization: false
+themeDir: loppo-theme
+direction: ltr

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>The Basics -  PHP 之道 | PHP The Right Way 中文版</title>
+        <meta name="description" content=""/>
+        <meta name="robots" content="index,follow,archive"/>
+        <meta property="og:image:url" content="http://www.phptherightway.com/images/og-image.png"/>
+        <meta property="og:image:width" content="1024"/>
+        <meta property="og:image:height" content="640"/>
+        <meta property="og:title" content="PHP: The Right Way"/>
+        <meta property="og:description" content="An easy-to-read, quick reference for PHP best practices, accepted coding standards, and links to authoritative PHP tutorials around the Web"/>
+        <meta property="og:url" content="http://www.phptherightway.com"/>
+        <meta property="og:site_name" content="PHP: The Right Way"/>
+        <meta property="og:type" content="website"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <link rel="icon" href="../images/favicon.png" type="image/png"/>
+        <link rel="stylesheet" href="../styles/syntax.css">
+        <link rel="stylesheet" href="../styles/css.css">
+        <base href="">
+        <style>
+        
+        </style>
+    </head>
+    <body>
+        <header class="site-header">
+            <h1><a href="http://laravel-china.github.io/">PHP <em>The Right Way</em></a></h1>
+            <div class="build-date">最后更新于: 2017-03-16 03:10:55 +0000 由 <a href="https://laravel-china.org/" target="_blank" >Laravel China 社区</a> 维护</div>
+            <div class="share">
+                <a class="btn-share" href="http://service.weibo.com/share/share.php?url=http://laravel-china.github.io/php-the-right-way&title=PHP+The+Right+Way+PHP+之道" target="_blank">分享到微博</a>
+                <br>
+                 <a class="btn-share" href="https://laravel-china.org/" target="_blank" style="margin-top: 13px;">❤ Laravel China 社区 ❤</a> 
+            </div>
+            <a class="fork-me" href="https://github.com/codeguy/php-the-right-way" target="_blank"></a>
+        </header>
+
+        <div class="site-content">
+            <h1 id="the-basics">The Basics</h1>
+
+<h2 id="comparison-operators">Comparison operators</h2>
+
+<p>Comparison operators are an often overlooked aspect of PHP, which can lead to many unexpected outcomes. One such
+problem stems from strict comparisons (the comparison of booleans as integers).</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>   <span class="c1">// 5 as an integer
+</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">5</span><span class="p">);</span>       <span class="c1">// compare value; return true
+</span><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="s1">'5'</span><span class="p">);</span>     <span class="c1">// compare value (ignore type); return true
+</span><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$a</span> <span class="o">===</span> <span class="mi">5</span><span class="p">);</span>      <span class="c1">// compare type/value (integer vs. integer); return true
+</span><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$a</span> <span class="o">===</span> <span class="s1">'5'</span><span class="p">);</span>    <span class="c1">// compare type/value (integer vs. string); return false
+</span>
+<span class="c1">//Equality comparisons
+</span><span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="s1">'testing'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">))</span> <span class="p">{</span>    <span class="c1">// 'test' is found at position 0, which is interpreted as the boolean 'false'
+</span>    <span class="c1">// code...
+</span><span class="p">}</span>
+
+<span class="c1">// vs. strict comparisons
+</span><span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="s1">'testing'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>    <span class="c1">// true, as strict comparison was made (0 !== false)
+</span>    <span class="c1">// code...
+</span><span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.operators.comparison">Comparison operators</a></li>
+  <li><a href="http://php.net/types.comparisons">Comparison table</a></li>
+  <li><a href="http://phpcheatsheets.com/index.php?page=compare">Comparison cheatsheet</a></li>
+</ul>
+
+<h2 id="conditional-statements">Conditional statements</h2>
+
+<h3 id="if-statements">If statements</h3>
+
+<p>While using ‘if/else’ statements within a function or class method, there is a common misconception that ‘else’ must be used
+in conjunction to declare potential outcomes. However if the outcome is to define the return value, ‘else’ is not
+necessary as ‘return’ will end the function, causing ‘else’ to become moot.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">test</span><span class="p">(</span><span class="nv">$a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$a</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// vs.
+</span>
+<span class="k">function</span> <span class="nf">test</span><span class="p">(</span><span class="nv">$a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$a</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>    <span class="c1">// else is not necessary
+</span><span class="p">}</span>
+
+<span class="c1">// or even shorter:
+</span>
+<span class="k">function</span> <span class="nf">test</span><span class="p">(</span><span class="nv">$a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="nv">$a</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/control-structures.if">If statements</a></li>
+</ul>
+
+<h3 id="switch-statements">Switch statements</h3>
+
+<p>Switch statements are a great way to avoid typing endless if’s and elseif’s, but there are a few things to be aware of:</p>
+
+<ul>
+  <li>Switch statements only compare values, and not the type (equivalent to ‘==’)</li>
+  <li>They Iterate case by case until a match is found. If no match is found, then the default is used (if defined)</li>
+  <li>Without a ‘break’, they will continue to implement each case until reaching a break/return</li>
+  <li>Within a function, using ‘return’ alleviates the need for ‘break’ as it ends the function</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$answer</span> <span class="o">=</span> <span class="nx">test</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>    <span class="c1">// the code from both 'case 2' and 'case 3' will be implemented
+</span>
+<span class="k">function</span> <span class="nf">test</span><span class="p">(</span><span class="nv">$a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nv">$a</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+            <span class="c1">// code...
+</span>            <span class="k">break</span><span class="p">;</span>             <span class="c1">// break is used to end the switch statement
+</span>        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+            <span class="c1">// code...         // with no break, comparison will continue to 'case 3'
+</span>        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+            <span class="c1">// code...
+</span>            <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>    <span class="c1">// within a function, 'return' will end the function
+</span>        <span class="k">default</span><span class="o">:</span>
+            <span class="c1">// code...
+</span>            <span class="k">return</span> <span class="nv">$error</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/control-structures.switch">Switch statements</a></li>
+  <li><a href="http://phpswitch.com/">PHP switch</a></li>
+</ul>
+
+<h2 id="global-namespace">Global namespace</h2>
+
+<p>When using namespaces, you may find that internal functions are hidden by functions you wrote. To fix this, refer to
+the global function by using a backslash before the function name.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">namespace</span> <span class="nx">phptherightway</span><span class="p">;</span>
+
+<span class="k">function</span> <span class="nf">fopen</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$file</span> <span class="o">=</span> <span class="nx">\fopen</span><span class="p">();</span>    <span class="c1">// Our function name is the same as an internal function.
+</span>                         <span class="c1">// Execute the function from the global space by adding '\'.
+</span><span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">array</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$iterator</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ArrayIterator</span><span class="p">();</span>    <span class="c1">// ArrayIterator is an internal class. Using its name without a backslash
+</span>                                         <span class="c1">// will attempt to resolve it within your namespace.
+</span><span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.namespaces.global">Global space</a></li>
+  <li><a href="http://php.net/userlandnaming.rules">Global rules</a></li>
+</ul>
+
+<h2 id="strings">Strings</h2>
+
+<h3 id="concatenation">Concatenation</h3>
+
+<ul>
+  <li>If your line extends beyond the recommended line length (120 characters), consider concatenating your line</li>
+  <li>For readability it is best to use concatenation operators over concatenating assignment operators</li>
+  <li>While within the original scope of the variable, indent when concatenation uses a new line</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span>  <span class="o">=</span> <span class="s1">'Multi-line example'</span><span class="p">;</span>    <span class="c1">// concatenating assignment operator (.=)
+</span><span class="nv">$a</span> <span class="o">.=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+<span class="nv">$a</span> <span class="o">.=</span> <span class="s1">'of what not to do'</span><span class="p">;</span>
+
+<span class="c1">// vs
+</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="s1">'Multi-line example'</span>      <span class="c1">// concatenation operator (.)
+</span>    <span class="o">.</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>                     <span class="c1">// indenting new lines
+</span>    <span class="o">.</span> <span class="s1">'of what to do'</span><span class="p">;</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.operators.string">String Operators</a></li>
+</ul>
+
+<h3 id="string-types">String types</h3>
+
+<p>Strings are a series of characters, which should sound fairly simple. That said, there are a few different types of
+strings and they offer slightly different syntax, with slightly different behaviors.</p>
+
+<h4 id="single-quotes">Single quotes</h4>
+
+<p>Single quotes are used to denote a “literal string”. Literal strings do not attempt to parse special characters or
+variables.</p>
+
+<p>If using single quotes, you could enter a variable name into a string like so: <code class="highlighter-rouge">'some $thing'</code>, and you would see the
+exact output of <code class="highlighter-rouge">some $thing</code>. If using double quotes, that would try to evaluate the <code class="highlighter-rouge">$thing</code> variable name and show
+errors if no variable was found.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">echo</span> <span class="s1">'This is my string, look at how pretty it is.'</span><span class="p">;</span>    <span class="c1">// no need to parse a simple string
+</span>
+<span class="sd">/**
+ * Output:
+ *
+ * This is my string, look at how pretty it is.
+ */</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.types.string#language.types.string.syntax.single">Single quote</a></li>
+</ul>
+
+<h4 id="double-quotes">Double quotes</h4>
+
+<p>Double quotes are the Swiss Army Knife of strings. They will not only parse variables as mentioned above, but all sorts
+of special characters, like <code class="highlighter-rouge">\n</code> for newline, <code class="highlighter-rouge">\t</code> for a tab, etc.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">echo</span> <span class="s1">'phptherightway is '</span> <span class="o">.</span> <span class="nv">$adjective</span> <span class="o">.</span> <span class="s1">'.'</span>     <span class="c1">// a single quotes example that uses multiple concatenating for
+</span>    <span class="o">.</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>                                       <span class="c1">// variables and escaped string
+</span>    <span class="o">.</span> <span class="s1">'I love learning'</span> <span class="o">.</span> <span class="nv">$code</span> <span class="o">.</span> <span class="s1">'!'</span><span class="p">;</span>
+
+<span class="c1">// vs
+</span>
+<span class="k">echo</span> <span class="s2">"phptherightway is </span><span class="nv">$adjective</span><span class="s2">.</span><span class="se">\n</span><span class="s2"> I love learning </span><span class="nv">$code</span><span class="s2">!"</span>  <span class="c1">// Instead of multiple concatenating, double quotes
+</span>                                                               <span class="o">//</span> <span class="nx">enables</span> <span class="nx">us</span> <span class="nx">to</span> <span class="k">use</span> <span class="nx">a</span> <span class="nx">parsable</span> <span class="nx">string</span></code></pre></figure>
+
+<p>Double quotes can contain variables; this is called “interpolation”.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$juice</span> <span class="o">=</span> <span class="s1">'plum'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">"I like </span><span class="nv">$juice</span><span class="s2"> juice"</span><span class="p">;</span>    <span class="o">//</span> <span class="nx">Output</span><span class="o">:</span> <span class="nx">I</span> <span class="nx">like</span> <span class="nx">plum</span> <span class="nx">juice</span></code></pre></figure>
+
+<p>When using interpolation, it is often the case that the variable will be touching another character. This will result
+in some confusion as to what is the name of the variable, and what is a literal character.</p>
+
+<p>To fix this problem, wrap the variable within a pair of curly brackets.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$juice</span> <span class="o">=</span> <span class="s1">'plum'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">"I drank some juice made of </span><span class="nv">$juices</span><span class="s2">"</span><span class="p">;</span>    <span class="c1">// $juice cannot be parsed
+</span>
+<span class="c1">// vs
+</span>
+<span class="nv">$juice</span> <span class="o">=</span> <span class="s1">'plum'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">"I drank some juice made of </span><span class="si">{</span><span class="nv">$juice</span><span class="si">}</span><span class="s2">s"</span><span class="p">;</span>    <span class="c1">// $juice will be parsed
+</span>
+<span class="sd">/**
+ * Complex variables will also be parsed within curly brackets
+ */</span>
+
+<span class="nv">$juice</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'apple'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'plum'</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s2">"I drank some juice made of </span><span class="si">{</span><span class="nv">$juice</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span><span class="nx">s</span><span class="s2">";   // </span><span class="nv">$juice[1]</span><span class="s2"> will be parsed</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.types.string#language.types.string.syntax.double">Double quotes</a></li>
+</ul>
+
+<h4 id="nowdoc-syntax">Nowdoc syntax</h4>
+
+<p>Nowdoc syntax was introduced in 5.3 and internally behaves the same way as single quotes except it is suited toward the
+use of multi-line strings without the need for concatenating.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$str</span> <span class="o">=</span> <span class="o">&lt;&lt;&lt;</span><span class="s1">'EOD'</span>             <span class="c1">// initialized by &lt;&lt;&lt;
+</span><span class="nx">Example</span> <span class="nx">of</span> <span class="nx">string</span>
+<span class="nx">spanning</span> <span class="nx">multiple</span> <span class="nx">lines</span>
+<span class="nx">using</span> <span class="nx">nowdoc</span> <span class="nx">syntax</span><span class="o">.</span>
+<span class="nv">$a</span> <span class="nx">does</span> <span class="k">not</span> <span class="nx">parse</span><span class="o">.</span>
+<span class="nx">EOD</span><span class="p">;</span>                        <span class="c1">// closing 'EOD' must be on it's own line, and to the left most point
+</span>
+<span class="sd">/**
+ * Output:
+ *
+ * Example of string
+ * spanning multiple lines
+ * using nowdoc syntax.
+ * $a does not parse.
+ */</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.types.string#language.types.string.syntax.nowdoc">Nowdoc syntax</a></li>
+</ul>
+
+<h4 id="heredoc-syntax">Heredoc syntax</h4>
+
+<p>Heredoc syntax internally behaves the same way as double quotes except it is suited toward the use of multi-line
+strings without the need for concatenating.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="s1">'Variables'</span><span class="p">;</span>
+
+<span class="nv">$str</span> <span class="o">=</span> <span class="o">&lt;&lt;&lt;</span><span class="nx">EOD</span>               <span class="c1">// initialized by &lt;&lt;&lt;
+</span><span class="nx">Example</span> <span class="nx">of</span> <span class="nx">string</span>
+<span class="nx">spanning</span> <span class="nx">multiple</span> <span class="nx">lines</span>
+<span class="nx">using</span> <span class="nx">heredoc</span> <span class="nx">syntax</span><span class="o">.</span>
+<span class="nv">$a</span> <span class="nx">are</span> <span class="nx">parsed</span><span class="o">.</span>
+<span class="nx">EOD</span><span class="p">;</span>                        <span class="c1">// closing 'EOD' must be on it's own line, and to the left most point
+</span>
+<span class="sd">/**
+ * Output:
+ *
+ * Example of string
+ * spanning multiple lines
+ * using heredoc syntax.
+ * Variables are parsed.
+ */</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://php.net/language.types.string#language.types.string.syntax.heredoc">Heredoc syntax</a></li>
+</ul>
+
+<h3 id="which-is-quicker">Which is quicker?</h3>
+
+<p>There is a myth floating around that single quote strings are fractionally quicker than double quote strings. This is
+fundamentally not true.</p>
+
+<p>If you are defining a single string and not trying to concatenate values or anything complicated, then either a single
+or double quoted string will be entirely identical. Neither are quicker.</p>
+
+<p>If you are concatenating multiple strings of any type, or interpolate values into a double quoted string, then the
+results can vary. If you are working with a small number of values, concatenation is minutely faster. With a lot of
+values, interpolating is minutely faster.</p>
+
+<p>Regardless of what you are doing with strings, none of the types will ever have any noticeable impact on your
+application. Trying to rewrite code to use one or the other is always an exercise in futility, so avoid this micro-
+optimization unless you really understand the meaning and impact of the differences.</p>
+
+<ul>
+  <li><a href="http://nikic.github.io/2012/01/09/Disproving-the-Single-Quotes-Performance-Myth.html">Disproving the Single Quotes Performance Myth</a></li>
+</ul>
+
+<h2 id="ternary-operators">Ternary operators</h2>
+
+<p>Ternary operators are a great way to condense code, but are often used in excess. While ternary operators can be
+stacked/nested, it is advised to use one per line for readability.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">echo</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="o">?</span> <span class="s1">'yay'</span> <span class="o">:</span> <span class="s1">'nay'</span><span class="p">;</span></code></pre></figure>
+
+<p>In comparison, here is an example that sacrifices all forms of readability for the sake of reducing the line count.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">echo</span> <span class="p">(</span><span class="nv">$a</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="o">?</span> <span class="s1">'yay'</span> <span class="o">:</span> <span class="s1">'nay'</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$b</span> <span class="o">==</span> <span class="mi">10</span><span class="p">)</span> <span class="o">?</span> <span class="s1">'excessive'</span> <span class="o">:</span> <span class="s1">':('</span><span class="p">;</span>    <span class="o">//</span> <span class="nx">excess</span> <span class="nx">nesting</span><span class="p">,</span> <span class="nx">sacrificing</span> <span class="nx">readability</span></code></pre></figure>
+
+<p>To ‘return’ a value with ternary operators use the correct syntax.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">echo</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="o">?</span> <span class="k">return</span> <span class="kc">true</span> <span class="o">:</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>    <span class="c1">// this example will output an error
+</span>
+<span class="c1">// vs
+</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">return</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="o">?</span> <span class="s1">'yay'</span> <span class="o">:</span> <span class="s1">'nope'</span><span class="p">;</span>    <span class="o">//</span> <span class="k">this</span> <span class="nx">example</span> <span class="nx">will</span> <span class="k">return</span> <span class="s1">'yay'</span></code></pre></figure>
+
+<p>It should be noted that you do not need to use a ternary operator for returning a boolean value. An example of this
+would be.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">return</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// Will return true or false if $a == 3
+</span>
+<span class="c1">// vs
+</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">return</span> <span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">;</span> <span class="o">//</span> <span class="nx">Will</span> <span class="k">return</span> <span class="kc">true</span> <span class="k">or</span> <span class="kc">false</span> <span class="k">if</span> <span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span></code></pre></figure>
+
+<p>This can also be said for all operations(===, !==, !=, == etc).</p>
+
+<h4 id="utilising-brackets-with-ternary-operators-for-form-and-function">Utilising brackets with ternary operators for form and function</h4>
+
+<p>When utilising a ternary operator, brackets can play their part to improve code readability and also to include unions
+within blocks of statements. An example of when there is no requirement to use bracketing is:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">return</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="s2">"yay"</span> <span class="o">:</span> <span class="s2">"nope"</span><span class="p">;</span> <span class="c1">// return yay or nope if $a == 3
+</span>
+<span class="c1">// vs
+</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">return</span> <span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="s2">"yay"</span> <span class="o">:</span> <span class="s2">"nope"</span><span class="p">;</span> <span class="o">//</span> <span class="k">return</span> <span class="nx">yay</span> <span class="k">or</span> <span class="nx">nope</span> <span class="k">if</span> <span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span></code></pre></figure>
+
+<p>Bracketing also affords us the capability of creating unions within a statement block where the block will be checked
+as a whole. Such as this example below which will return true if both ($a == 3 and $b == 4) are true and $c == 5 is
+also true.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">return</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="nv">$b</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nv">$c</span> <span class="o">==</span> <span class="mi">5</span><span class="p">;</span></code></pre></figure>
+
+<p>Another example is the snippet below which will return true if ($a != 3 AND $b != 4) OR $c == 5.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">return</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">!=</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="nv">$b</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$c</span> <span class="o">==</span> <span class="mi">5</span><span class="p">;</span></code></pre></figure>
+
+<p>Since PHP 5.3, it is possible to leave out the middle part of the ternary operator.
+Expression “expr1 ?: expr3” returns expr1 if expr1 evaluates to TRUE, and expr3 otherwise.</p>
+
+<ul>
+  <li><a href="http://php.net/language.operators.comparison">Ternary operators</a></li>
+</ul>
+
+<h2 id="variable-declarations">Variable declarations</h2>
+
+<p>At times, coders attempt to make their code “cleaner” by declaring predefined variables with a different name. What
+this does in reality is to double the memory consumption of said script. For the example below, let us say an example
+string of text contains 1MB worth of data, by copying the variable you’ve increased the scripts execution to 2MB.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$about</span> <span class="o">=</span> <span class="s1">'A very long string of text'</span><span class="p">;</span>    <span class="c1">// uses 2MB memory
+</span><span class="k">echo</span> <span class="nv">$about</span><span class="p">;</span>
+
+<span class="c1">// vs
+</span>
+<span class="k">echo</span> <span class="s1">'A very long string of text'</span><span class="p">;</span>        <span class="o">//</span> <span class="nx">uses</span> <span class="mi">1</span><span class="nx">MB</span> <span class="nx">memory</span></code></pre></figure>
+
+<ul>
+  <li><a href="http://web.archive.org/web/20140625191431/https://developers.google.com/speed/articles/optimizing-php">Performance tips</a></li>
+</ul>
+
+        </div>
+
+        <footer class="site-footer" id="credits">
+             <h2>中文版本</h2>  
+            <ul>
+                <li><a href="https://github.com/summerblue" target="_blank">Summer</a></li>
+                <li><a href="https://laravel-china.org/" target="_blank">Laravel China 社区</a></li>
+                <li><a href="https://github.com/laravel-china/php-the-right-way/graphs/contributors" target="_blank">项目贡献者</a></li>
+            </ul>
+            <h2>原始版本创建和维护</h2>
+            <ul>
+                <li><a href="http://joshlockhart.com" target="_blank">Josh Lockhart</a></li>
+                <li><a href="http://philsturgeon.co.uk/" target="_blank">Phil Sturgeon</a></li>
+                <li><a href="https://github.com/codeguy/php-the-right-way/graphs/contributors" target="_blank">Project Contributors</a></li>
+            </ul>
+            <div class="license">
+                <a class="cc-badge" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"></a>
+                <br />
+                <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">PHP: The Right Way</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://joshlockhart.com" property="cc:attributionName" rel="cc:attributionURL">Josh Lockhart</a>
+                <br/>
+                is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://www.phptherightway.com" rel="dct:source">www.phptherightway.com</a>.
+            </div>
+        </footer>
+    </body>
+</html>
