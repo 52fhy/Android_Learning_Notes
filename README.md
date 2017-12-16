@@ -42,8 +42,8 @@
 ### 数据存储
  [23.1、数据存储与访问——文件存储读写](notes/basic/23.1.database_file.md)   
  [23.2、数据存储与访问——SharedPreferences](notes/basic/23.2.database_SharedPreferences.md)   
- [23.2、数据存储与访问——SQLite数据库](notes/basic/23.3.database_SQLite.md)   
- [23.2、数据存储与访问——操作XML数据](notes/basic/23.4.database_XML.md)   
+ [23.3、数据存储与访问——SQLite数据库](notes/basic/23.3.database_SQLite.md)   
+ [23.4、数据存储与访问——操作XML数据](notes/basic/23.4.database_XML.md)   
 
 
 ### 网络与通信
