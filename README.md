@@ -21,5 +21,6 @@
 
 >参考资料：  
 1、极客学院：[《Android工程师》职业路径图](http://ke.jikexueyuan.com/zhiye/android/)  
-2、coder-pig：[Android基础入门教程](http://blog.csdn.net/coder_pig/article/details/50000773)  
+2、coder-pig：[Android基础入门教程](http://www.runoob.com/w3cnote/android-tutorial-intro.html)  
 3、郭霖：《第一行代码——Android》  
+
